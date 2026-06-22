@@ -1,0 +1,22 @@
+#cloud-config
+package_update: true
+packages:
+  - nginx
+
+write_files:
+  - path: /var/www/html/index.html
+    content: |
+      <!DOCTYPE html>
+      <html>
+        <head><title>App 1</title></head>
+        <body>
+          <h1>App 1 - Status: OK</h1>
+          <p>This is the baseline incident simulation environment.</p>
+        </body>
+      </html>
+    owner: www-data:www-data
+    permissions: '0644'
+
+runcmd:
+  - systemctl enable nginx
+  - systemctl restart nginx
