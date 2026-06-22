@@ -1,7 +1,7 @@
 variable "location" {
   description = "Azure region for all resources"
   type        = string
-  default     = "UK South"
+  default     = "West Europe"
 }
 
 variable "prefix" {
@@ -29,5 +29,5 @@ variable "allowed_ssh_cidr" {
 variable "vm_size" {
   description = "VM size - B1s is the cheapest general purpose option"
   type        = string
-  default     = "Standard_B1s"
+  default     = "Standard_B2s_v2"
 }
