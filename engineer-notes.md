@@ -12,3 +12,8 @@ sudo chown -R www-data:www-data /path  # restore nginx ownership
 az vm run-command invoke ...       # run command on VM without SSH
 az network nsg rule show ...       # check NSG rule access
 az vm list-usage --location ...    # check quota availability
+
+## Push to GIT
+git add .                          # add changes to Git
+git commit -m "insert subject"     # add a commit subject message 
+git push origin main               # push to git
