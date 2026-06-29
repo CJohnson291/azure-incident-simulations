@@ -17,3 +17,31 @@ az vm list-usage --location ...    # check quota availability
 git add .                          # add changes to Git
 git commit -m "insert subject"     # add a commit subject message 
 git push origin main               # push to git
+
+## DNS / Name Resolution
+nslookup github.com          # test DNS resolution from VM
+ping -c 4 8.8.8.8            # test IP connectivity (not DNS)
+# If ping works but nslookup fails = DNS issue, not network issue
+# Check VNet DNS settings first — overrides VM-level config
+# Azure default DNS: 168.63.129.16
+
+# List all subscriptions you have access to
+az account list --output table
+
+# Switch subscription — by name
+az account set --subscription "My Subscription Name"
+
+# Linux VM commands
+# Disk
+df -h                              # disk usage across all filesystems
+ls -lt /var/log/ | head -20        # log directory sorted newest first - spotted the culprit
+ls -lh /path/to/file               # check specific file size
+rm /path/to/file && df -h          # delete file and confirm space recovered
+du -sh /var/log/*                  # size of each item in a directory
+# Processes
+ps aux --sort=-%cpu | head -20     # top processes by CPU usage
+# Services
+systemctl list-units --state=failed  # any failed servicesYes 
+
+sudo ss -tlnp | grep nginx    # check what port nginx is actually listening on
+sudo ss -tlnp                 # check all listening ports and services
