@@ -45,3 +45,21 @@ systemctl list-units --state=failed  # any failed servicesYes
 
 sudo ss -tlnp | grep nginx    # check what port nginx is actually listening on
 sudo ss -tlnp                 # check all listening ports and services
+
+
+## Terraform State Lock
+# If terraform apply fails with "state locked" error:
+terraform plan                          # get the lock ID from the error output
+
+# For remote state (S3, Azure Blob):
+terraform force-unlock <LOCK_ID>        # force unlock using the ID
+
+# For local state:
+rm .terraform.tfstate.lock.info         # delete the lock file directly
+
+# Then retry:
+terraform apply
+
+# If force-unlock and deleting lock file both fail:
+terraform apply -lock=false    # bypass locking entirely
+# Only safe for solo/local environments - never use in shared/production state
