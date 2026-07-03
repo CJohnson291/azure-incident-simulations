@@ -63,3 +63,37 @@ terraform apply
 # If force-unlock and deleting lock file both fail:
 terraform apply -lock=false    # bypass locking entirely
 # Only safe for solo/local environments - never use in shared/production state
+
+
+az network nic show \
+  --resource-group rg-incidentsim \
+  --name nic-incidentsim-app1 \
+  --query "networkSecurityGroup.id" \
+  --output tsv
+
+  az network nic update \
+  --resource-group rg-incidentsim \
+  --name nic-incidentsim-app1 \
+  --network-security-group nsg-incidentsim-app1
+
+## Powershell
+
+  # Check RDP service status
+Get-Service -Name TermService | Select-Object Name, Status, StartType
+
+# Restore and start RDP service
+Set-Service -Name TermService -StartupType Automatic
+Start-Service -Name TermService
+
+# Check all stopped services
+Get-Service | Where-Object {$_.Status -eq "Stopped"}
+
+# Check if port 3389 is listening
+netstat -an | findstr 3389
+
+
+## RDP error codes
+0x204 — connection refused, service not running
+Timeout — network block (NSG, firewall)
+0x907 — VM not ready/booting
+Credentials error — wrong username/password
