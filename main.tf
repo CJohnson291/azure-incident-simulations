@@ -1,4 +1,10 @@
 terraform {
+    backend "azurerm" {
+    resource_group_name  = "rg-tfstate-incidentsim"
+    storage_account_name = "cjtfstateincidentsim"
+    container_name       = "tfstate"
+    key                  = "incidentsim.terraform.tfstate"
+  }
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
