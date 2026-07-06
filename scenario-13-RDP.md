@@ -27,10 +27,10 @@ RDP Error code: 0x204
 Error code 0x204 means the connection was refused — the client reached the host but nothing was listening on port 3389. This points directly to the RDP service (TermService) not running rather than a network block (which would give a timeout instead).
 
 az vm run-command invoke \
->   --resource-group rg-incidentsim-windows \
->   --name vm-win-app1 \
->   --command-id RunPowerShellScript \
->   --scripts "Get-Service -Name TermService | Select-Object Name, Status, StartType"
+  --resource-group rg-incidentsim-windows \
+  --name vm-win-app1 \
+  --command-id RunPowerShellScript \
+  --scripts "Get-Service -Name TermService | Select-Object Name, Status, StartType"
 
 This showed that the RDP service had been stopped
 

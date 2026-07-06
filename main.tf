@@ -1,10 +1,11 @@
 terraform {
-    backend "azurerm" {
+  backend "azurerm" {
     resource_group_name  = "rg-tfstate-incidentsim"
     storage_account_name = "cjtfstateincidentsim"
     container_name       = "tfstate"
     key                  = "incidentsim.terraform.tfstate"
   }
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -72,17 +73,6 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-
-  depends_on = [azurerm_subnet_network_security_group_association.nsg_assoc]
-}
-
-resource "azurerm_subnet_network_security_group_association" "nsg_assoc" {
-  subnet_id                 = azurerm_subnet.subnet.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-
-  lifecycle {
-    create_before_destroy = false
-  }
 }
 
 resource "azurerm_public_ip" "pip" {
@@ -104,6 +94,11 @@ resource "azurerm_network_interface" "nic" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.pip.id
   }
+}
+
+resource "azurerm_network_interface_security_group_association" "nsg_assoc" {
+  network_interface_id      = azurerm_network_interface.nic.id
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
 resource "azurerm_linux_virtual_machine" "app1" {

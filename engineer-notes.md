@@ -91,9 +91,29 @@ Get-Service | Where-Object {$_.Status -eq "Stopped"}
 # Check if port 3389 is listening
 netstat -an | findstr 3389
 
+az vm run-command invoke \
+  --resource-group rg-incidentsim-windows \
+  --name vm-win-app1 \
+  --command-id RunPowerShellScript \
+  --scripts "netstat -an | findstr 3389"
+
 
 ## RDP error codes
 0x204 — connection refused, service not running
 Timeout — network block (NSG, firewall)
 0x907 — VM not ready/booting
 Credentials error — wrong username/password
+
+# Check Windows Firewall RDP rule
+Get-NetFirewallRule -DisplayName 'Remote Desktop - User Mode (TCP-In)' | Select-Object DisplayName, Enabled, Direction
+
+# Enable RDP firewall rule
+Set-NetFirewallRule -DisplayName 'Remote Desktop - User Mode (TCP-In)' -Enabled True
+
+# Check all disabled firewall rules
+Get-NetFirewallRule | Where-Object {$_.Enabled -eq 'False' -and $_.Direction -eq 'Inbound'}
+
+# Check what's listening on port 3389
+netstat -an | findstr 3389
+
+curl -4 ifconfig.me
