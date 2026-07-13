@@ -116,4 +116,13 @@ Get-NetFirewallRule | Where-Object {$_.Enabled -eq 'False' -and $_.Direction -eq
 # Check what's listening on port 3389
 netstat -an | findstr 3389
 
+
+# Check ip
 curl -4 ifconfig.me
+
+# update NSG with my current IP
+az network nsg rule update \
+  --resource-group rg-incidentsim-windows \
+  --nsg-name nsg-incidentsim-windows-app1 \
+  --name Allow-RDP \
+  --source-address-prefixes $(curl -4 -s ifconfig.me)/32
