@@ -126,3 +126,13 @@ az network nsg rule update \
   --nsg-name nsg-incidentsim-windows-app1 \
   --name Allow-RDP \
   --source-address-prefixes $(curl -4 -s ifconfig.me)/32
+
+  # Check cipher state
+$basePath = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers'
+Get-ItemProperty -Path "$basePath\RC4 128/128"
+
+# Disable weak cipher
+Set-ItemProperty -Path "$basePath\RC4 128/128" -Name 'Enabled' -Value 0 -Type DWORD -Force
+
+# Enable strong cipher
+Set-ItemProperty -Path "$basePath\AES 256/256" -Name 'Enabled' -Value 1 -Type DWORD -Force
