@@ -84,4 +84,4 @@ AWS Config rules (restricted-ssh, vpc-sg-open-only-to-authorized-ports) alert on
 Add a comparison note in learning notes: "AWS Security Groups are conceptually identical to Azure NSGs — inbound/outbound rules, protocol/port/source. Key difference: Security Groups are associated directly to the EC2 instance, not to a NIC or subnet separately. This means no manual NIC association step required after deployment — a recurring issue in the Azure environment.
 
 
-*Part of an ongoing Azure incident simulation series — see [repo README] for context.*
+*Part of an ongoing AWS + Azure incident simulation series — see [repo README] for context.*

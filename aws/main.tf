@@ -111,12 +111,13 @@ resource "aws_key_pair" "app1" {
 }
 
 resource "aws_instance" "app1" {
-  ami                    = var.ami_id
-  instance_type          = var.instance_type
-  subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.app1.id]
-  key_name               = aws_key_pair.app1.key_name
-  user_data              = file("${path.module}/user-data.sh")
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public.id
+  vpc_security_group_ids      = [aws_security_group.app1.id]
+  key_name                    = aws_key_pair.app1.key_name
+  user_data                   = file("${path.module}/user-data.sh")
+  iam_instance_profile        = aws_iam_instance_profile.ssm_profile.name
 
   tags = {
     Name    = "${var.prefix}-app1"
@@ -133,4 +134,29 @@ resource "aws_eip" "app1" {
     Name    = "${var.prefix}-eip-app1"
     project = "incident-simulation-aws"
   }
+}
+
+resource "aws_iam_role" "ssm_role" {
+  name = "${var.prefix}-ec2-ssm-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_policy" {
+  role       = aws_iam_role.ssm_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "ssm_profile" {
+  name = "${var.prefix}-ec2-ssm-profile"
+  role = aws_iam_role.ssm_role.name
 }
