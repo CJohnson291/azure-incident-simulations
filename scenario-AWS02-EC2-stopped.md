@@ -64,4 +64,4 @@ bashaws ec2 stop-instances \
   loses its public IP, AWS Elastic IP persists through stop/start — IP 
   was unchanged on restart, no downstream DNS/config updates needed.
 ---
-*Part of an ongoing Azure incident simulation series — see [repo README] for context.*
+*Part of an ongoing AWS + Azure incident simulation series — see [repo README] for context.*
