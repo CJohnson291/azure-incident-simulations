@@ -1,0 +1,58 @@
+# Incident Report: GitHub Actions - Terraform Validation Workflow
+
+**Scenario #:** 22
+**Date:** 07/08/2026
+**Environment:** GitHub Actions / azure-incident-simulations repo
+**Severity (self-assessed):** N/A — BAU task
+**Time to resolution:** 30 minutes
+
+## 1. Ticket
+TICKET#022 — BAU Task
+Raised by: Engineering Lead
+Time: 10:00
+"Hi, we need to add some basic CI/CD guardrails to the infrastructure 
+repo. Can you add a GitHub Actions workflow that validates Terraform 
+code on every pull request — formatting check and configuration 
+validation as a minimum."
+
+## 2. Initial Triage
+N/A — BAU task, no incident to triage.
+
+## 3. Investigation
+N/A — BAU task.
+
+## 4. Root Cause
+N/A — proactive improvement, no existing fault.
+
+## 5. Resolution
+Created `.github/workflows/terraform-validate.yml` with steps to:
+- Trigger on pull request to main
+- Check out code
+- Install Terraform
+- Run `terraform fmt --check --recursive`
+- Run `terraform init -backend=false`
+- Run `terraform validate`
+
+## 6. Verification
+Raised a test pull request — workflow triggered automatically, 
+ran all steps, and reported results under the Checks tab of the PR.
+
+## 7. What Was Actually Changed
+New GitHub Actions workflow added to the repo — any future pull 
+request to main will automatically validate Terraform formatting 
+and configuration before merge is permitted.
+
+## 8. Learning Notes
+- **What went well:** Workflow triggered correctly on first PR test.
+- **What took longer than expected:** PAT token needed workflow scope 
+  added — not obvious until the push failed. Worth remembering for 
+  future workflow additions.
+- **Hints used:** Full YAML provided — GitHub Actions syntax is new 
+  and will become more familiar with practice.
+- **What I'd check first if this happened again:** Ensure PAT has 
+  workflow scope before attempting to push workflow files.
+- **Prevention/value:** This workflow prevents invalid or badly 
+  formatted Terraform from reaching main — a standard guardrail 
+  in any infrastructure repo. Next steps could include adding 
+  `terraform plan` with Azure credentials for a full pre-merge 
+  plan check.
