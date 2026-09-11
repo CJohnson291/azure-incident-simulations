@@ -136,3 +136,74 @@ Set-ItemProperty -Path "$basePath\RC4 128/128" -Name 'Enabled' -Value 0 -Type DW
 
 # Enable strong cipher
 Set-ItemProperty -Path "$basePath\AES 256/256" -Name 'Enabled' -Value 1 -Type DWORD -Force
+
+# List security group rules
+aws ec2 describe-security-groups \
+  --group-ids sg-xxxxxxxx \
+  --region eu-west-2
+
+# Add HTTP inbound rule
+aws ec2 authorize-security-group-ingress \
+  --group-id sg-xxxxxxxx \
+  --protocol tcp \
+  --port 80 \
+  --cidr 0.0.0.0/0 \
+  --region eu-west-2
+
+# Remove a rule
+aws ec2 revoke-security-group-ingress \
+  --group-id sg-xxxxxxxx \
+  --protocol tcp \
+  --port 80 \
+  --cidr 0.0.0.0/0 \
+  --region eu-west-2
+
+  # Check instance state
+aws ec2 describe-instances \
+  --instance-ids i-xxxx \
+  --query "Reservations[0].Instances[0].State.Name" \
+  --output text \
+  --region eu-west-2
+
+# Start instance
+aws ec2 start-instances \
+  --instance-ids i-xxxx \
+  --region eu-west-2
+
+# Stop instance
+aws ec2 stop-instances \
+  --instance-ids i-xxxx \
+  --region eu-west-2
+
+  # Check IIS service
+Get-Service -Name W3SVC | Select-Object Name, Status, StartType
+
+# Start IIS
+Set-Service -Name W3SVC -StartupType Automatic
+Start-Service -Name W3SVC
+
+# Stop IIS
+Stop-Service -Name W3SVC -Force
+Set-Service -Name W3SVC -StartupType Disabled
+
+# Check IIS sites
+Get-Website
+
+# Check IIS app pools
+Get-WebConfiguration system.applicationHost/applicationPools/add
+
+# Check service (Powershell)
+Get-Service -Name Spooler | Select-Object Name, Status, StartType
+
+# Find service by partial name
+Get-Service "appname*"
+
+# Find service by display name
+Get-Service | Where-Object {$_.DisplayName -like "*appname*"}
+
+# Check service status and startup type
+Get-Service -Name Spooler | Select-Object Name, Status, StartType
+
+# Re-enable and start a disabled service
+Set-Service -Name Spooler -StartupType Automatic
+Start-Service -Name Spooler
